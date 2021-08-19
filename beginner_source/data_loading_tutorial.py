@@ -58,7 +58,7 @@ plt.ion()   # 상호작용 모드
 #     1084239450_e76e00b7e7.jpg,70,236,71,257, ... ,128,312
 #
 # 그럼 CSV 파일에서 N개의 특징점(Landmarks)을 가진 (N, 2) 행렬을 가져와 보겠습니다.
-# 
+#
 #
 
 landmarks_frame = pd.read_csv('data/faces/face_landmarks.csv')
@@ -75,15 +75,15 @@ print('First 4 Landmarks: {}'.format(landmarks[:4]))
 
 
 ######################################################################
-# Let's write a simple helper function to show an image and its landmarks
-# and use it to show a sample.
+# 이미지와 특징점을 보여주는 간단한 헬퍼 함수를 작성하고
+# 그 함수를 이용해서 샘플을 표시합니다.
 #
 
 def show_landmarks(image, landmarks):
     """Show image with landmarks"""
     plt.imshow(image)
     plt.scatter(landmarks[:, 0], landmarks[:, 1], s=10, marker='.', c='r')
-    plt.pause(0.001)  # pause a bit so that plots are updated
+    plt.pause(0.001)  # 업데이트를 위해 잠시 멈춤
 
 plt.figure()
 show_landmarks(io.imread(os.path.join('data/faces/', img_name)),
@@ -92,28 +92,25 @@ plt.show()
 
 
 ######################################################################
-# Dataset class
+# Dataset 클래스
 # -------------
 #
-# ``torch.utils.data.Dataset`` is an abstract class representing a
-# dataset.
-# Your custom dataset should inherit ``Dataset`` and override the following
-# methods:
+# ``torch.utils.data.Dataset`` 데이터셋을 나타내는 추상 클래스입니다.
+# 사용자 정의 데이터셋은 반드시 ``Dataset`` 을 상속하고
+# 아래의 메소드들을 오버라이딩 해야 합니다.:
 #
-# -  ``__len__`` so that ``len(dataset)`` returns the size of the dataset.
-# -  ``__getitem__`` to support the indexing such that ``dataset[i]`` can
-#    be used to get :math:`i`\ th sample.
+# -  ``len(dataset)`` 에서 호출하는 ``__len__`` 은 데이터셋의 크기를 반환합니다.
+# -  ``dataset[i]`` 와 같은 인덱싱을 지원하기 위한 ``__getitem__`` 은
+#    :math:`i`\ 번째 샘플을 가져옵니다.
 #
-# Let's create a dataset class for our face landmarks dataset. We will
-# read the csv in ``__init__`` but leave the reading of images to
-# ``__getitem__``. This is memory efficient because all the images are not
-# stored in the memory at once but read as required.
+# 얼굴 특징점 데이터셋을 위한 데이터셋을 만들어 보겠습니다.
+# ``__init__`` 으로 CSV 파일을 읽지만 이미지는 ``__getitem__`` 에서
+# 읽어들이기 위해 남겨둡니다. 이런 방법은 모든 이미지를 한꺼번에 메모리에 저장하지 않고
+# 필요할 때마다 읽어 들이기에 메모리를 효율적으로 사용하는 방식입니다.
 #
-# Sample of our dataset will be a dict
-# ``{'image': image, 'landmarks': landmarks}``. Our dataset will take an
-# optional argument ``transform`` so that any required processing can be
-# applied on the sample. We will see the usefulness of ``transform`` in the
-# next section.
+# 데이터셋은 dict인 ``{'image': image, 'landmarks': landmarks}`` 가 됩니다.
+# 데이터셋은 선택적인 인자인 ``transform`` 을 이용해서 필요한 어떤 전처리도
+# 샘플에 적용할 수 있습니다. ``transform`` 의 유용성은 다음 장에서 보겠습니다.
 #
 
 class FaceLandmarksDataset(Dataset):
@@ -153,8 +150,8 @@ class FaceLandmarksDataset(Dataset):
 
 
 ######################################################################
-# Let's instantiate this class and iterate through the data samples. We
-# will print the sizes of first 4 samples and show their landmarks.
+# 클래스를 생성하고 데이터 샘플들을 반복문을 통하여 봅시다.
+# 처음 4개의 샘플의 크기를 출력하고 특징점을 프린트 합니다.
 #
 
 face_dataset = FaceLandmarksDataset(csv_file='data/faces/face_landmarks.csv',
